@@ -1,0 +1,116 @@
+.create-account-container {
+    display: flex;
+    min-height: calc(100vh - 130px); /* Subtract header height */
+    margin-top: 0;
+  }
+  
+  .create-account-left {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem;
+    background-color: #0066cc;
+  }
+  
+  .create-account-logo {
+    width: 100%;
+    max-width: 400px;
+    margin-bottom: 1rem;
+  }
+  
+  .create-account-brand-text {
+    color: white;
+    font-size: 2.7rem;
+    font-weight: bold;
+    text-align: center;
+    letter-spacing: 1px;
+  }
+  
+  .create-account-right {
+    flex: 1;
+    background-color: #0066cc;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem;
+    min-height: calc(100vh - 130px); /* Subtract header height */
+  }
+  
+  .create-account-form-container {
+    width: 100%;
+    max-width: 400px;
+    padding: 1.5rem;
+    background-color: white;
+    border-radius: 8px;
+  }
+  
+  .create-account-form-container h2 {
+    font-size: 1.5rem;
+    margin-bottom: 0.25rem;
+    color: #333;
+  }
+  
+  .create-account-subtitle {
+    color: #666;
+    margin-bottom: 1.5rem;
+    font-size: 0.9rem;
+  }
+  
+  .form-group {
+    margin-bottom: 1rem;
+  }
+  
+  .create-account-input {
+    width: 100%;
+    padding: 0.7rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    background-color: #f5f7fa;
+  }
+  
+  .create-account-input:focus {
+    outline: none;
+    border-color: #0066cc;
+    box-shadow: 0 0 0 2px rgba(0, 102, 204, 0.1);
+  }
+  
+  .create-account-button {
+    width: 100%;
+    padding: 0.7rem;
+    background-color: #0066cc;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    margin-top: 0.5rem;
+  }
+  
+  .create-account-button:hover {
+    background-color: #0052a3;
+  }
+  
+  .create-account-links {
+    margin-top: 1rem;
+    text-align: center;
+  }
+  
+  .create-account-link-group {
+    margin: 0.5rem 0;
+    color: #000000;
+    font-size: 0.9rem;
+  }
+  
+  .blue-link {
+    color: #0066cc;
+    text-decoration: none;
+    margin-left: 0.25rem;
+  }
+  
+  .blue-link:hover {
+    text-decoration: underline;
+  } 

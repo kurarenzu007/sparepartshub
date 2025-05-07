@@ -1,0 +1,137 @@
+/* SettingsPage.css - Styling for the Settings Page */
+
+.admin-header {
+    margin-bottom: 25px;
+  }
+  
+  .admin-header h1 {
+    color: #2c3e50;
+    font-size: 24px;
+    font-weight: 600;
+    position: relative;
+    padding-bottom: 10px;
+  }
+  
+  .admin-header h1:after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    height: 3px;
+    width: 50px;
+    background-color: #3498db;
+  }
+  
+  .settings-container {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+  
+  .settings-section {
+    background-color: #ffffff;
+    border-radius: 10px;
+    padding: 25px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  }
+  
+  .settings-section h2 {
+    color: #2c3e50;
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #e9ecef;
+    display: flex;
+    align-items: center;
+  }
+  
+  .settings-section h2 svg {
+    margin-right: 10px;
+    color: #3498db;
+  }
+  
+  .settings-group {
+    margin-bottom: 20px;
+  }
+  
+  .settings-group label {
+    display: block;
+    margin-bottom: 8px;
+    color: #34495e;
+    font-weight: 500;
+    font-size: 14px;
+  }
+  
+  .settings-group input[type="text"],
+  .settings-group input[type="email"],
+  .settings-group input[type="password"],
+  .settings-group textarea,
+  .settings-group select {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid #dcdfe6;
+    border-radius: 5px;
+    font-size: 14px;
+    color: #2c3e50;
+    transition: border-color 0.3s;
+  }
+  
+  .settings-group input[type="text"]:focus,
+  .settings-group input[type="email"]:focus,
+  .settings-group input[type="password"]:focus,
+  .settings-group textarea:focus,
+  .settings-group select:focus {
+    outline: none;
+    border-color: #3498db;
+    box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+  }
+  
+  .settings-group textarea {
+    resize: vertical;
+    min-height: 80px;
+  }
+  
+  .settings-group .mt-2 {
+    margin-top: 10px;
+  }
+  
+  .settings-button {
+    background-color: #3498db;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 12px 20px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s;
+  }
+  
+  .settings-button svg {
+    margin-right: 8px;
+  }
+  
+  .settings-button:hover {
+    background-color: #2980b9;
+  }
+  
+  /* Responsive adjustments */
+  @media (min-width: 992px) {
+    .settings-container {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .settings-section {
+      padding: 20px;
+    }
+    
+    .settings-button {
+      width: 100%;
+    }
+  }

@@ -1,0 +1,60 @@
+.brand-carousel {
+    padding: 20px;
+    background: white;
+    margin: 20px auto;
+    max-width: 1200px;
+  }
+  
+  .brand-slide {
+    padding: 10px;
+    cursor: pointer;
+    transition: transform 0.2s;
+  }
+  
+  .brand-slide:hover {
+    transform: scale(1.05);
+  }
+  
+  .brand-logo {
+    width: 120px;
+    height: auto;
+    margin: 0 auto;
+    display: block;
+    object-fit: contain;
+  }
+  
+  /* Customize slick carousel dots */
+  .slick-dots {
+    bottom: -30px;
+  }
+  
+  .slick-dots li button:before {
+    font-size: 10px;
+    color: #2174b8;
+  }
+  
+  .slick-dots li.slick-active button:before {
+    color: #2174b8;
+  }
+  
+  /* Customize slick carousel arrows */
+  .slick-prev,
+  .slick-next {
+    width: 30px;
+    height: 30px;
+    z-index: 1;
+  }
+  
+  .slick-prev:before,
+  .slick-next:before {
+    color: #2174b8;
+    font-size: 24px;
+  }
+  
+  .slick-prev {
+    left: -35px;
+  }
+  
+  .slick-next {
+    right: -35px;
+  } 

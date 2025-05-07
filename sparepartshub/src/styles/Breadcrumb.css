@@ -1,0 +1,27 @@
+.breadcrumb {
+    padding: 15px 20px;
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #e9ecef;
+    font-size: 14px;
+    color: #6c757d;
+  }
+  
+  .breadcrumb-link {
+    color: #2174b8;
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  
+  .breadcrumb-link:hover {
+    color: #1a5c94;
+    text-decoration: underline;
+  }
+  
+  .breadcrumb-text {
+    color: #6c757d;
+  }
+  
+  .breadcrumb-separator {
+    margin: 0 10px;
+    color: #6c757d;
+  } 

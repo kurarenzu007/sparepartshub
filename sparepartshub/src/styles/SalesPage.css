@@ -1,0 +1,195 @@
+/* SalesPage.css - Styling specifically for the Sales Management page */
+
+/* Sales Page Header */
+.admin-header {
+    margin-bottom: 25px;
+  }
+  
+  .admin-header h1 {
+    color: #2c3e50;
+    font-size: 24px;
+    font-weight: 600;
+    position: relative;
+    padding-bottom: 10px;
+  }
+  
+  .admin-header h1:after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    height: 3px;
+    width: 50px;
+    background-color: #3498db;
+  }
+  
+  /* Sales Summary Cards */
+  .sales-summary {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    margin-bottom: 30px;
+  }
+  
+  .summary-card {
+    background-color: #ffffff;
+    border-radius: 10px;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .summary-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+  }
+  
+  .summary-icon {
+    background-color: rgba(52, 152, 219, 0.1);
+    padding: 15px;
+    border-radius: 50%;
+    font-size: 24px;
+    color: #3498db;
+    margin-right: 18px;
+  }
+  
+  .summary-card:nth-child(2) .summary-icon {
+    background-color: rgba(46, 204, 113, 0.1);
+    color: #2ecc71;
+  }
+  
+  .summary-card:nth-child(3) .summary-icon {
+    background-color: rgba(155, 89, 182, 0.1);
+    color: #9b59b6;
+  }
+  
+  .summary-info h3 {
+    margin: 0;
+    font-size: 14px;
+    color: #7f8c8d;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  
+  .summary-info p {
+    margin: 8px 0 0;
+    font-size: 24px;
+    font-weight: 700;
+    color: #2c3e50;
+  }
+  
+  /* Sales Table */
+  .table-container {
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    margin-top: 20px;
+  }
+  
+  .sales-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .sales-table thead {
+    background-color: #f8f9fa;
+  }
+  
+  .sales-table th {
+    text-align: left;
+    padding: 16px;
+    font-weight: 600;
+    color: #2c3e50;
+    border-bottom: 2px solid #e9ecef;
+    text-transform: uppercase;
+    font-size: 12px;
+    letter-spacing: 0.5px;
+  }
+  
+  .sales-table td {
+    padding: 16px;
+    border-bottom: 1px solid #e9ecef;
+    color: #34495e;
+    font-size: 14px;
+    vertical-align: middle;
+  }
+  
+  .sales-table tbody tr:hover {
+    background-color: #f8f9fa;
+  }
+  
+  /* Product cell specific styling */
+  .sales-table td:nth-child(4) {
+    max-width: 250px;
+    line-height: 1.4;
+  }
+  
+  /* Order ID styling */
+  .sales-table td:first-child {
+    font-weight: 600;
+    color: #3498db;
+  }
+  
+  /* Status Badge Styling */
+  .status-badge {
+    display: inline-block;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    text-align: center;
+    min-width: 80px;
+  }
+  
+  .status-badge.completed {
+    background-color: #e6f7ee;
+    color: #27ae60;
+  }
+  
+  .status-badge.pending {
+    background-color: #fff4e6;
+    color: #f39c12;
+  }
+  
+  .status-badge.cancelled {
+    background-color: #fee8e8;
+    color: #e74c3c;
+  }
+  
+  /* Amount column styling */
+  .sales-table td:nth-child(6) {
+    font-weight: 600;
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 1024px) {
+    .sales-summary {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .sales-summary {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .table-container {
+      overflow-x: auto;
+    }
+    
+    .sales-table {
+      min-width: 800px;
+    }
+  }
+  
+  @media (max-width: 576px) {
+    .sales-summary {
+      grid-template-columns: 1fr;
+    }
+  }

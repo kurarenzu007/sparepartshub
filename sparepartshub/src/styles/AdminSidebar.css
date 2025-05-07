@@ -1,0 +1,123 @@
+.admin-sidebar {
+    width: 250px;
+    height: 100vh;
+    background-color: #1976d2;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    left: 0;
+    top: 0;
+  }
+  
+  .logo-container {
+    margin-bottom: 2rem;
+    text-align: center;
+  }
+  
+  .shop-logo {
+    max-width: 150px;
+    height: auto;
+  }
+  
+  .admin-info {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    padding: 1rem;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+  }
+  
+  .admin-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+  
+  .admin-name {
+    font-weight: 500;
+    color: white;
+  }
+  
+  .sidebar-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    flex-grow: 1;
+  }
+  
+  .nav-item {
+    padding: 0.75rem 1rem;
+    border: none;
+    background: none;
+    text-align: left;
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 0.9rem;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+  }
+  
+  .nav-item:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: white;
+  }
+  
+  .nav-item.active {
+    background-color: #ff9800;
+    color: white;
+  }
+  
+  .logout-button {
+    margin-top: auto;
+    padding: 0.75rem 1rem;
+    background-color: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 6px;
+    color: white;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  
+  .logout-button:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+    color: #ff5252;
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .admin-sidebar {
+      width: 100%;
+      height: auto;
+      position: relative;
+      padding: 1rem;
+    }
+  
+    .sidebar-nav {
+      flex-direction: row;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+  
+    .nav-item {
+      flex: 1;
+      min-width: 120px;
+      text-align: center;
+      justify-content: center;
+    }
+  
+    .logout-button {
+      margin-top: 1rem;
+      justify-content: center;
+    }
+  } 

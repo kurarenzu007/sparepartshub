@@ -1,0 +1,38 @@
+.checkout-header {
+    background-color: #F4B400;
+    color: white;
+  }
+  
+  .checkout-header a {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    transition: opacity 0.2s ease;
+  }
+  
+  .checkout-header a:hover {
+    opacity: 0.8;
+  }
+  
+  .header-content {
+    display: flex;
+    justify-content: start; /* Aligns items to the left */
+    align-items: center;
+    max-width: auto;
+    margin: 0 auto;
+  }
+  
+  .logo-image {
+    max-height: 60px;
+    width: auto;
+    object-fit: contain;
+    margin-left: 45px;  /* Add space on the left */
+  }
+  
+  .header-title {
+    font-size: 1.2em;
+    position: absolute;
+    left: 70%;
+    transform: translateX(-50%);
+  }
+  
