@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from "react-router-dom";
 import '../styles/App.css';
 
@@ -7,186 +7,37 @@ import Footer from '../components/Footer';
 import BrandCarousel from '../components/brandCarousel';
 import { FiShoppingCart, FiMinus, FiPlus } from 'react-icons/fi';
 import { Trash2 } from 'lucide-react';
-
-// Import product images
-import air_filter from '../assets/air_filter.jpg';
-import alternator from '../assets/alternator.jpeg';
-import battery from '../assets/battery.jpg';
-import belt from '../assets/belt.jpg';
-import brake_caliper from '../assets/brake_caliper.jpg';
-import clutch_kit from '../assets/clutch_kit.jpg';
-import exhaust from '../assets/exhaust.jpg';
-import fuel_injector from '../assets/fuel_injector.png';
-import headlight from '../assets/headlight.jpg';
-import oilFilter from '../assets/oilFilter.jpg';
-import radiator from '../assets/radiator.jpg';
-import shock_absorber from '../assets/shock_absorber.jpg';
-import spark_plug from '../assets/spark_plug.jpg';
-import steering_pump from '../assets/steering_pump.jpg';
-import turbocharger from '../assets/turbocharger.jpg';
-
-// Mock products data
-const mockProducts = [
-  {
-    id: 1,
-    name: "Premium Air Filter",
-    brand: "Bosch",
-    price: 1299.99,
-    stock: 50,
-    category: "Engine",
-    description: "High-performance air filter for improved engine efficiency and air flow. Compatible with most modern vehicles.",
-    image: air_filter
-  },
-  {
-    id: 2,
-    name: "High Output Alternator",
-    brand: "Denso",
-    price: 8999.99,
-    stock: 15,
-    category: "Electrical",
-    description: "Premium alternator with increased power output for vehicles with high electrical demands.",
-    image: alternator
-  },
-  {
-    id: 3,
-    name: "Maintenance-Free Battery",
-    brand: "Motolite",
-    price: 4999.99,
-    stock: 30,
-    category: "Electrical",
-    description: "Long-lasting maintenance-free battery with superior cold-cranking performance.",
-    image: battery
-  },
-  {
-    id: 4,
-    name: "Timing Belt Kit",
-    brand: "Gates",
-    price: 3499.99,
-    stock: 25,
-    category: "Engine",
-    description: "Complete timing belt kit including belt, tensioner, and idler pulleys.",
-    image: belt
-  },
-  {
-    id: 5,
-    name: "Performance Brake Caliper",
-    brand: "Brembo",
-    price: 12999.99,
-    stock: 10,
-    category: "Brakes",
-    description: "High-performance brake caliper for improved stopping power and heat dissipation.",
-    image: brake_caliper
-  },
-  {
-    id: 6,
-    name: "Heavy Duty Clutch Kit",
-    brand: "Exedy",
-    price: 15999.99,
-    stock: 8,
-    category: "Transmission",
-    description: "Complete clutch kit designed for high-torque applications and heavy-duty use.",
-    image: clutch_kit
-  },
-  {
-    id: 7,
-    name: "Performance Exhaust System",
-    brand: "Magnaflow",
-    price: 24999.99,
-    stock: 5,
-    category: "Exhaust",
-    description: "Stainless steel exhaust system for improved flow and performance.",
-    image: exhaust
-  },
-  {
-    id: 8,
-    name: "Direct Injection Fuel Injector",
-    brand: "Bosch",
-    price: 2999.99,
-    stock: 40,
-    category: "Fuel System",
-    description: "Precision fuel injector for optimal fuel delivery and engine performance.",
-    image: fuel_injector
-  },
-  {
-    id: 9,
-    name: "LED Headlight Assembly",
-    brand: "Philips",
-    price: 7999.99,
-    stock: 20,
-    category: "Lighting",
-    description: "Complete LED headlight assembly with improved visibility and energy efficiency.",
-    image: headlight
-  },
-  {
-    id: 10,
-    name: "Synthetic Oil Filter",
-    brand: "Mann-Filter",
-    price: 999.99,
-    stock: 100,
-    category: "Engine",
-    description: "High-quality oil filter designed for synthetic oil and extended service intervals.",
-    image: oilFilter
-  },
-  {
-    id: 11,
-    name: "Aluminum Radiator",
-    brand: "Koyo",
-    price: 11999.99,
-    stock: 12,
-    category: "Cooling",
-    description: "High-performance aluminum radiator for improved cooling efficiency.",
-    image: radiator
-  },
-  {
-    id: 12,
-    name: "Performance Shock Absorber",
-    brand: "KYB",
-    price: 4999.99,
-    stock: 25,
-    category: "Suspension",
-    description: "Premium shock absorber for improved ride comfort and handling.",
-    image: shock_absorber
-  },
-  {
-    id: 13,
-    name: "Iridium Spark Plug",
-    brand: "NGK",
-    price: 499.99,
-    stock: 200,
-    category: "Ignition",
-    description: "Long-lasting iridium spark plug for improved ignition and fuel efficiency.",
-    image: spark_plug
-  },
-  {
-    id: 14,
-    name: "Power Steering Pump",
-    brand: "Aisin",
-    price: 8999.99,
-    stock: 15,
-    category: "Steering",
-    description: "High-quality power steering pump for smooth and responsive steering.",
-    image: steering_pump
-  },
-  {
-    id: 15,
-    name: "Performance Turbocharger",
-    brand: "Garrett",
-    price: 34999.99,
-    stock: 5,
-    category: "Forced Induction",
-    description: "High-performance turbocharger for increased power and efficiency.",
-    image: turbocharger
-  }
-];
+import { getProducts } from '../services/api';
+import tcjLogo from "../assets/tcj_logo.png"; // Import the fallback image
 
 const HomePage = () => {
   const [showCart, setShowCart] = useState(false);
   const [cartItems, setCartItems] = useState([]);
-  const [products] = useState(mockProducts);
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const productsPerPage = 12;
   const navigate = useNavigate();
   const { id } = useParams();
+
+  // Fetch products from API
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const data = await getProducts();
+        setProducts(data);
+        setError(null);
+      } catch (err) {
+        setError('Failed to load products');
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProducts();
+  }, []);
 
   // Calculate pagination
   const totalPages = Math.ceil(products.length / productsPerPage);
@@ -240,7 +91,8 @@ const HomePage = () => {
   // Calculate total price considering quantity
   const totalPrice = cartItems.reduce((total, item) => total + (item.price * item.quantity), 0);
 
-  const product = products.find(p => p.id === Number(id));
+  if (loading) return <div className="loading">Loading...</div>;
+  if (error) return <div className="error">{error}</div>;
 
   return (
     <div className="app-container">
@@ -257,7 +109,12 @@ const HomePage = () => {
               <div className="cart-items-container">
                 {cartItems.map((item, index) => (
                   <div key={index} className="cart-item">
-                    <img src={item.image} alt={item.name} className="cart-item-img" />
+                    <img 
+                      src={`http://localhost:5000${item.image_path}`} 
+                      alt={item.name} 
+                      className="cart-item-img" 
+                     
+                    />
                     <div className="cart-item-details">
                       <strong>{item.name}</strong>
                       <p>₱ {item.price.toLocaleString('en-US', { minimumFractionDigits: 2 })}</p>
@@ -316,12 +173,9 @@ const HomePage = () => {
               onClick={() => navigate(`/product-details/${product.id}`)}
             >
               <img 
-                src={product.image}
+                 src={`http://localhost:5000${product.image_path}`}
                 alt={product.name} 
                 className="product-image"
-                onError={(e) => {
-                  e.target.src = air_filter; // fallback image
-                }}
               />
               <div className="brand-name">{product.category}</div>
               <h3>{product.name}</h3>

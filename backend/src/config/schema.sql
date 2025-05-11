@@ -69,3 +69,5 @@ INSERT INTO inventory (product_id, sku, stock, low_stock_threshold, supplier) VA
 (3, 'FLT-001', 20, 5, 'Honda Parts'),
 (4, 'ENG-001', 50, 10, 'NGK Philippines'),
 (5, 'BAT-001', 8, 3, 'Motolite'); 
+
+ALTER TABLE products ADD COLUMN image BLOB;

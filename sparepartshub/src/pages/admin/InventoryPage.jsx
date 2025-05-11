@@ -165,7 +165,7 @@ const InventoryPage = () => {
   const handleUpdateItem = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch(`http://localhost:5000/api/inventory/${selectedItem.id}`, {
+      const response = await fetch(`http://localhost:5000/api/products/${selectedItem.id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

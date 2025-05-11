@@ -101,11 +101,13 @@ const ProductsPage = () => {
   const handleModalSubmit = async (formData) => {
     try {
       if (selectedProduct) {
+        // For update, we need to append the method to FormData
         await updateProduct(selectedProduct.id, formData);
       } else {
         await createProduct(formData);
       }
       setIsModalOpen(false);
+      setSelectedProduct(null);
       setError(null);
       await fetchProducts();
     } catch (error) {
@@ -205,4 +207,4 @@ const ProductsPage = () => {
   );
 };
 
-export default ProductsPage; 
+export default ProductsPage;

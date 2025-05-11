@@ -1,0 +1,181 @@
+/* Modern styling for UsersPage */
+.users-container {
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+  padding: 2rem;
+}
+
+.page-header {
+  margin-bottom: 2rem;
+}
+
+.page-title {
+  color: #1a1a1a;
+  font-weight: 600;
+  font-size: 1.75rem;
+  margin-bottom: 0;
+}
+
+.action-buttons {
+  gap: 0.75rem;
+}
+
+/* Table styling */
+.table-container {
+  background: #ffffff;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+}
+
+.custom-table {
+  margin-bottom: 0;
+}
+
+.custom-table thead th {
+  background-color: #f8f9fa;
+  border-bottom: 2px solid #e9ecef;
+  color: #495057;
+  font-weight: 600;
+  padding: 1rem;
+  text-transform: uppercase;
+  font-size: 0.875rem;
+  letter-spacing: 0.5px;
+}
+
+.custom-table tbody td {
+  padding: 1rem;
+  vertical-align: middle;
+  color: #2c3e50;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.custom-table tbody tr:hover {
+  background-color: #f8f9fa;
+}
+
+/* Button styling */
+.btn-custom {
+  padding: 0.5rem 1.25rem;
+  font-weight: 500;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+.btn-custom:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.btn-add {
+  background-color: #10b981;
+  border-color: #10b981;
+}
+
+.btn-add:hover {
+  background-color: #059669;
+  border-color: #059669;
+}
+
+.btn-edit {
+  background-color: #f59e0b;
+  border-color: #f59e0b;
+}
+
+.btn-edit:hover {
+  background-color: #d97706;
+  border-color: #d97706;
+}
+
+.btn-delete {
+  background-color: #ef4444;
+  border-color: #ef4444;
+}
+
+.btn-delete:hover {
+  background-color: #dc2626;
+  border-color: #dc2626;
+}
+
+/* Modal styling - FIXED */
+.custom-modal .modal-content {
+  border-radius: 16px;
+  border: none;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+.custom-modal .modal-header {
+  border-bottom: 1px solid #e9ecef;
+  padding: 1.5rem;
+}
+
+.custom-modal .modal-title {
+  font-weight: 600;
+  color: #1a1a1a;
+}
+
+.custom-modal .modal-body {
+  padding: 1.5rem;
+}
+
+.custom-modal .modal-footer {
+  border-top: 1px solid #e9ecef;
+  padding: 1.5rem;
+}
+
+/* Fixed Modal Centering */
+.modal-dialog {
+  display: flex;
+  align-items: center;
+  min-height: calc(100% - 1rem);
+  margin: 0.5rem auto;
+}
+
+.modal-dialog-centered {
+  justify-content: center;
+}
+
+/* Form styling */
+.form-label {
+  font-weight: 500;
+  color: #4b5563;
+  margin-bottom: 0.5rem;
+}
+
+.form-control {
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+  padding: 0.75rem 1rem;
+  transition: all 0.2s ease;
+}
+
+.form-control:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+/* Loading spinner */
+.loading-spinner {
+  color: #3b82f6;
+}
+
+/* Alert styling */
+.custom-alert {
+  border-radius: 12px;
+  border: none;
+  padding: 1rem 1.5rem;
+}
+
+/* Empty state */
+.empty-state {
+  padding: 3rem 1rem;
+  text-align: center;
+  color: #6b7280;
+}
+
+.empty-state-icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  color: #9ca3af;
+}
