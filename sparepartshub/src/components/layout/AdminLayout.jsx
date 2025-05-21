@@ -1,6 +1,6 @@
 import React from 'react';
 import { Outlet, NavLink } from 'react-router-dom';
-import { FiHome, FiPackage, FiDollarSign, FiUsers } from 'react-icons/fi';
+import { FiHome, FiPackage, FiDollarSign, FiUsers, FiShoppingCart } from 'react-icons/fi';
 import '../../styles/AdminPanel.css';
 
 const AdminLayout = () => {
@@ -22,6 +22,11 @@ const AdminLayout = () => {
             </NavLink>
           </li>
           <li>
+            <NavLink to="/admin/orders">
+              <FiShoppingCart /> Orders
+            </NavLink>
+          </li>
+          <li>
             <NavLink to="/admin/sales">
               <FiDollarSign /> Sales
             </NavLink>
@@ -40,4 +45,4 @@ const AdminLayout = () => {
   );
 };
 
-export default AdminLayout; 
+export default AdminLayout;

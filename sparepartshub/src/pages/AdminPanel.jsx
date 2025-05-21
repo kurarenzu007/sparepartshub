@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { Routes, Route } from 'react-router-dom';
-import { FiLogOut, FiGrid, FiBox, FiDollarSign, FiSettings, FiPackage, FiUsers } from 'react-icons/fi';
+import { FiLogOut, FiGrid, FiBox, FiDollarSign, FiSettings, FiPackage, FiUsers, FiShoppingCart } from 'react-icons/fi';
 import DashboardPage from './admin/DashboardPage';
 import ProductsPage from './admin/ProductsPage';
 import SalesPage from './admin/SalesPage';
 import SettingsPage from './admin/SettingsPage';
+import OrdersPage from './admin/OrdersPage';
 import InventoryPage from './admin/InventoryPage';
 import UsersPage from './admin/UsersPage';
 import tcjLogo from '../assets/tcj_logo2.png';
@@ -21,9 +22,11 @@ const AdminPanel = () => {
     { id: 'dashboard', icon: <FiGrid />, label: 'Dashboard', component: <DashboardPage /> },
     { id: 'products', icon: <FiBox />, label: 'Products', component: <ProductsPage /> },
     { id: 'inventory', icon: <FiPackage />, label: 'Inventory', component: <InventoryPage /> },
+    { id: 'orders', icon: <FiShoppingCart />, label: 'Orders', component: <OrdersPage /> },
     { id: 'sales', icon: <FiDollarSign />, label: 'Sales', component: <SalesPage /> },
     { id: 'users', icon: <FiUsers />, label: 'Users', component: <UsersPage /> },
     { id: 'settings', icon: <FiSettings />, label: 'Settings', component: <SettingsPage /> }
+
   ];
   
   // Handle navigation between sections
