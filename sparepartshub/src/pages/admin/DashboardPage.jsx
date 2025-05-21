@@ -1,6 +1,32 @@
 import React, { useState, useEffect } from 'react';
 import { FiShoppingCart, FiPackage, FiDollarSign, FiUsers, FiRefreshCw } from 'react-icons/fi';
 import '../../styles/AdminPanel.css';
+import { Line, Bar, Pie } from 'react-chartjs-2';
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  BarElement,
+  ArcElement,
+  Title,
+  Tooltip,
+  Legend,
+} from 'chart.js';
+
+// Register Chart.js components
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  BarElement,
+  ArcElement,
+  Title,
+  Tooltip,
+  Legend
+);
 
 const DashboardPage = () => {
   const [stats, setStats] = useState({
@@ -127,12 +153,112 @@ const DashboardPage = () => {
       </div>
 
       <div className="dashboard-charts">
+        {/* Sales Trend Chart */}
         <div className="chart-container">
-          <h2>Sales Overview</h2>
-          <div className="chart-placeholder">
-            Sales Chart will be displayed here
-          </div>
+          <h2>Sales Trend</h2>
+          <Line
+            data={{
+              labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+              datasets: [{
+                label: 'Monthly Sales',
+                data: [12000, 19000, 15000, 21000, 18000, 22000],
+                borderColor: 'rgb(75, 192, 192)',
+                tension: 0.1
+              }]
+            }}
+            options={{
+              responsive: true,
+              plugins: {
+                legend: {
+                  position: 'top',
+                },
+                title: {
+                  display: true,
+                  text: 'Monthly Sales Trend'
+                }
+              },
+              scales: {
+                y: {
+                  beginAtZero: true,
+                  ticks: {
+                    callback: function(value) {
+                      return '₱' + value.toLocaleString();
+                    }
+                  }
+                }
+              }
+            }}
+          />
         </div>
+
+        {/* Inventory Status Chart */}
+        <div className="chart-container">
+          <h2>Inventory Status</h2>
+          <Bar
+            data={{
+              labels: ['Engine Parts', 'Brake Parts', 'Suspension', 'Electrical'],
+              datasets: [{
+                label: 'Stock Level',
+                data: [85, 59, 90, 81],
+                backgroundColor: [
+                  'rgba(54, 162, 235, 0.5)',
+                  'rgba(255, 99, 132, 0.5)',
+                  'rgba(75, 192, 192, 0.5)',
+                  'rgba(153, 102, 255, 0.5)'
+                ]
+              }]
+            }}
+            options={{
+              responsive: true,
+              plugins: {
+                legend: {
+                  position: 'top',
+                },
+                title: {
+                  display: true,
+                  text: 'Inventory Levels by Category'
+                }
+              },
+              scales: {
+                y: {
+                  beginAtZero: true
+                }
+              }
+            }}
+          />
+        </div>
+
+        {/* Order Status Distribution */}
+        <div className="chart-container">
+          <h2>Order Status Distribution</h2>
+          <Pie
+            data={{
+              labels: ['Completed', 'Pending', 'Cancelled'],
+              datasets: [{
+                data: [65, 25, 10],
+                backgroundColor: [
+                  'rgba(75, 192, 192, 0.5)',
+                  'rgba(255, 99, 132, 0.5)',
+                  'rgba(255, 206, 86, 0.5)'
+                ]
+              }]
+            }}
+            options={{
+              responsive: true,
+              plugins: {
+                legend: {
+                  position: 'top',
+                },
+                title: {
+                  display: true,
+                  text: 'Order Status Distribution'
+                }
+              }
+            }}
+          />
+        </div>
+
+        {/* Recent Orders Table */}
         <div className="chart-container">
           <h2>Recent Orders</h2>
           <div className="recent-orders">
@@ -173,4 +299,4 @@ const DashboardPage = () => {
   );
 };
 
-export default DashboardPage; 
+export default DashboardPage;

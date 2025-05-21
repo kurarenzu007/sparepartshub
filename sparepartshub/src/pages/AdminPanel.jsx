@@ -9,7 +9,7 @@ import OrdersPage from './admin/OrdersPage';
 import InventoryPage from './admin/InventoryPage';
 import UsersPage from './admin/UsersPage';
 import tcjLogo from '../assets/tcj_logo2.png';
-import defaultAvatar from '../assets/default-avatar.png';
+import defaultAvatar from '../assets/alden.jpg';
 import '../styles/AdminPanel.css';
 import '../styles/AdminSidebar.css';
 import '../styles/InventoryPage.css'; // Import the new CSS file

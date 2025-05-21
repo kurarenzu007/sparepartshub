@@ -1,99 +1,204 @@
-.orders-container {
-  padding: 20px;
-  max-width: 900px;
-  margin: 0 auto;
-  font-family: sans-serif;
+.container {
+  max-width: 1200px;
+  margin: auto;
 }
 
-h2 {
-  margin-bottom: 16px;
+.table th, .table td {
+  vertical-align: middle;
+  padding: 1rem 1.2rem;
 }
 
-.controls {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 16px;
-}
-
-.controls input {
-  padding: 6px 10px;
-  font-size: 14px;
-  width: 60%;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-}
-
-.controls select {
-  padding: 6px 10px;
-  font-size: 14px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-}
-
-.orders-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-bottom: 16px;
-}
-
-.orders-table th,
-.orders-table td {
-  border: 1px solid #ddd;
-  padding: 10px;
-  text-align: left;
-}
-
-.orders-table th {
-  background-color: #f4f4f4;
-  cursor: pointer;
+.table th {
+  font-weight: 600;
 }
 
 .badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  padding: 3px 8px;
-  border-radius: 12px;
-  font-size: 13px;
-  font-weight: bold;
+  font-size: 0.85rem;
+  border-radius: 1rem;
 }
 
-.completed {
-  background-color: #d4edda;
-  color: #155724;
-}
-
-.cancelled {
-  background-color: #f8d7da;
-  color: #721c24;
-}
-
-.pending {
-  background-color: #fff3cd;
-  color: #856404;
+.page-link {
+  padding: 0.5rem 0.9rem;
+  margin: 0 0.2rem;
 }
 
 .pagination {
+  margin-top: 1.5rem;
+}
+
+input.form-control,
+select.form-select {
+  padding: 0.6rem 0.9rem;
+}
+
+/* Modal Styles */
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1050;
+}
+
+.modal-content {
+  background-color: white;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 700px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  animation: modalFadeIn 0.3s ease-out;
+}
+
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.modal-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid #dee2e6;
 }
 
-.pagination button {
-  padding: 6px 12px;
+.modal-title {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.btn-close {
+  background: none;
   border: none;
-  background-color: #333;
-  color: white;
   cursor: pointer;
+  padding: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: background-color 0.2s;
+}
+
+.btn-close:hover {
+  background-color: #f0f0f0;
+}
+
+.modal-body {
+  padding: 1.5rem;
+}
+
+.modal-footer {
+  padding: 1rem 1.5rem;
+  border-top: 1px solid #dee2e6;
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+
+.form-label {
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+  display: block;
+}
+
+.table-bordered {
+  margin-top: 1rem;
+}
+
+/* View Modal Styles */
+.view-modal {
+  max-width: 600px;
+}
+
+.view-body {
+  padding: 1.5rem;
+}
+
+.view-row {
+  display: flex;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+  gap: 1rem;
+}
+
+.view-field {
+  flex: 1;
+  min-width: 200px;
+}
+
+.view-label {
+  font-size: 0.85rem;
+  color: #666;
+  margin-bottom: 0.25rem;
+  position: relative;
+}
+
+.view-label::after {
+  content: '';
+  position: absolute;
+  bottom: -0.25rem;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background-color: #e0e0e0;
+}
+
+.view-value {
+  padding: 0.5rem 0.25rem;
   border-radius: 4px;
+  border: 1px solid #e0e0e0;
+  background-color: #f9f9f9;
+  font-size: 0.95rem;
 }
 
-.pagination button:disabled {
-  background-color: #aaa;
-  cursor: not-allowed;
+.full-width {
+  width: 100%;
 }
 
-.no-data {
-  text-align: center;
-  font-style: italic;
+.full-width .view-field {
+  width: 100%;
+}
+
+.view-table {
+  margin-top: 1.5rem;
+}
+
+.view-table table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.view-table th,
+.view-table td {
+  padding: 0.75rem;
+  text-align: left;
+  border: 1px solid #dee2e6;
+}
+
+.view-table th {
+  background-color: #f8f9fa;
+  font-weight: 600;
+}
+
+.view-footer {
+  justify-content: center;
+  padding: 1rem;
+}
+
+.view-footer .btn {
+  min-width: 120px;
 }
