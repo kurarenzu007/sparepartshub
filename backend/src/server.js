@@ -9,6 +9,7 @@ const productRoutes = require('./routes/products');
 const inventoryRoutes = require('./routes/inventory');
 const salesRoutes = require('./routes/sales');
 const usersRoutes = require('./routes/users');
+const orderRoutes = require('./routes/orders');
 require('dotenv').config();
 
 const app = express();
@@ -46,6 +47,7 @@ app.use('/api/products', productRoutes);
 app.use('/api/inventory', inventoryRoutes);
 app.use('/api/sales', salesRoutes);
 app.use('/api/users', usersRoutes);
+app.use('/api/orders', orderRoutes);
 
 // Test database connection
 testConnection();

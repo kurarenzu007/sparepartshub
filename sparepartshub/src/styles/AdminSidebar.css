@@ -1,9 +1,9 @@
 .admin-sidebar {
-    width: 225px; /* Reduced to 90% of 250px */
+    width: 200px; /* Slightly reduced from original */
     height: 100vh;
     background-color: #1976d2;
     box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
-    padding: 1.35rem; /* Reduced padding proportionally */
+    padding: 0.8rem; /* Slightly reduced padding */
     display: flex;
     flex-direction: column;
     position: fixed;
@@ -12,7 +12,7 @@
   }
   
   .logo-container {
-    margin-bottom: 2rem;
+    margin-bottom: 1.2rem;
     text-align: center;
   }
   
@@ -24,16 +24,16 @@
   .admin-info {
     display: flex;
     align-items: center;
-    gap: 1rem;
-    margin-bottom: 2rem;
-    padding: 1rem;
+    gap: 0.6rem;
+    margin-bottom: 1.5rem;
+    padding: 0.6rem;
     background-color: rgba(255, 255, 255, 0.1);
-    border-radius: 8px;
+    border-radius: 6px;
   }
   
   .admin-avatar {
-    width: 40px;
-    height: 40px;
+    width: 32px;
+    height: 32px;
     border-radius: 50%;
     object-fit: cover;
   }
@@ -41,23 +41,24 @@
   .admin-name {
     font-weight: 500;
     color: white;
+    font-size: 0.85rem;
   }
   
   .sidebar-nav {
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
+    gap: 0.4rem;
     flex-grow: 1;
   }
   
   .nav-item {
-    padding: 0.75rem 1rem;
+    padding: 0.5rem 0.6rem;
     border: none;
     background: none;
     text-align: left;
     color: rgba(255, 255, 255, 0.8);
-    font-size: 0.9rem;
-    border-radius: 6px;
+    font-size: 0.85rem;
+    border-radius: 4px;
     cursor: pointer;
     transition: all 0.2s ease;
     display: flex;
@@ -76,12 +77,12 @@
   
   .logout-button {
     margin-top: auto;
-    padding: 0.75rem 1rem;
+    padding: 0.5rem 0.6rem;
     background-color: rgba(255, 255, 255, 0.1);
     border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 6px;
+    border-radius: 4px;
     color: white;
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     cursor: pointer;
     transition: all 0.2s ease;
     display: flex;
@@ -97,10 +98,10 @@
   /* Responsive Design */
   @media (max-width: 768px) {
     .admin-sidebar {
-      width: 100%;
-      height: auto;
-      position: relative;
-      padding: 1rem;
+      width: 180px;
+      height: 100vh;
+      position: fixed;
+      padding: 0.8rem;
     }
   
     .sidebar-nav {

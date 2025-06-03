@@ -12,7 +12,8 @@ CREATE TABLE IF NOT EXISTS products (
     category VARCHAR(100) NOT NULL,
     description TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    image VARCHAR(244), NOT NULL
 );
 
 -- Inventory table
@@ -54,20 +55,72 @@ CREATE TABLE users (
 );
 
 
--- Insert some sample data
-INSERT INTO products (name, brand, price, stock, category, description) VALUES
-('Brake Pads', 'Toyota', 1200.00, 15, 'Brake System', 'High-quality brake pads for Toyota vehicles'),
-('Engine Oil', 'Shell', 450.00, 30, 'Lubricants', '10W-40 Synthetic Engine Oil'),
-('Air Filter', 'Honda', 350.00, 20, 'Filters', 'Premium air filter for Honda models'),
-('Spark Plugs', 'NGK', 120.00, 50, 'Engine Parts', 'Iridium spark plugs'),
-('Battery', 'Motolite', 4500.00, 8, 'Electrical', '12V 60Ah Maintenance Free Battery');
+--orders table
 
--- Insert corresponding inventory records
-INSERT INTO inventory (product_id, sku, stock, low_stock_threshold, supplier) VALUES
-(1, 'BRK-001', 15, 5, 'AutoParts Inc.'),
-(2, 'LUB-001', 30, 10, 'Shell Philippines'),
-(3, 'FLT-001', 20, 5, 'Honda Parts'),
-(4, 'ENG-001', 50, 10, 'NGK Philippines'),
-(5, 'BAT-001', 8, 3, 'Motolite'); 
+CREATE TABLE orders (
+    id VARCHAR(20) PRIMARY KEY,  -- Format: ORD-2401 (same as sales.id)
+    order_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    customer_name VARCHAR(100) NOT NULL,
+    customer_phone VARCHAR(20) NOT NULL,
+    items_count INT NOT NULL,
+    total_amount DECIMAL(10,2) NOT NULL,
+    payment_method VARCHAR(50) NOT NULL,  -- 'Cash on Delivery' or 'GCash'
+    payment_status VARCHAR(20) DEFAULT 'Pending',  -- 'Pending', 'Paid', 'Failed'
+    status VARCHAR(20) DEFAULT 'Pending',  -- 'Pending', 'Processing', 'Delivered', 'Cancelled'
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
 
-ALTER TABLE products ADD COLUMN image BLOB;
+-- Order items (if you need to track individual products)
+CREATE TABLE order_items (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    order_id VARCHAR(20) NOT NULL,
+    product_name VARCHAR(255) NOT NULL,
+    quantity INT NOT NULL,
+    unit_price DECIMAL(10,2) NOT NULL,
+    FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE
+);
+--connect the orders to sales table
+DELIMITER //
+CREATE TRIGGER after_order_delivered
+AFTER UPDATE ON orders
+FOR EACH ROW
+BEGIN
+    IF NEW.status = 'Delivered' AND (OLD.status IS NULL OR OLD.status != 'Delivered') THEN
+        -- Insert into sales table
+        INSERT INTO sales (
+            id,
+            transaction_date,
+            customer_name,
+            products,
+            quantity,
+            amount,
+            status,
+            created_at,
+            updated_at
+        )
+        SELECT 
+            o.id,
+            o.order_date,
+            o.customer_name,
+            JSON_ARRAYAGG(
+                JSON_OBJECT(
+                    'name', oi.product_name,
+                    'quantity', oi.quantity,
+                    'price', oi.unit_price
+                )
+            ),
+            o.items_count,
+            o.total_amount,
+            'Completed',
+            o.created_at,
+            o.updated_at
+        FROM orders o
+        LEFT JOIN order_items oi ON o.id = oi.order_id
+        WHERE o.id = NEW.id
+        GROUP BY o.id;
+    END IF;
+END;//
+DELIMITER ;
+
+
