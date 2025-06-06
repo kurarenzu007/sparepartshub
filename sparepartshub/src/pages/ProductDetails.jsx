@@ -108,6 +108,16 @@ const ProductDetails = () => {
     setCartItems(newCart);
   };
 
+  const handleBuyNow = () => {
+    if (product) {
+      const itemToBuy = {
+        ...product,
+        quantity: quantity
+      };
+      navigate("/checkout", { state: { cartItems: [itemToBuy] } });
+    }
+  };
+
   const handleCheckout = () => {
     navigate("/checkout", { state: { cartItems } });
   };
@@ -225,7 +235,7 @@ const ProductDetails = () => {
               <button className="add-to-cart-btn" onClick={handleAddToCart}>
                 Add to Cart
               </button>
-              <button className="buy-now-btn" onClick={handleCheckout}>
+              <button className="buy-now-btn" onClick={handleBuyNow}>
                 Buy Now
               </button>
             </div>

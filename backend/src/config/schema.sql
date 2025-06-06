@@ -124,3 +124,4 @@ END;//
 DELIMITER ;
 
 
+ALTER TABLE sales ADD COLUMN payment_method VARCHAR(50) NULL;

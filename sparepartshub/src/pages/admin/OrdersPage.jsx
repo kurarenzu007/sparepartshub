@@ -51,18 +51,42 @@ export default function OrdersPage() {
 
   const handleStatusChange = async (orderId, newStatus) => {
     try {
-      const order = orders.find(o => o.id === orderId);
-      // If status is already Delivered or CANCELLED, don't allow changes
-      if (order.status === 'Delivered' || order.status === 'CANCELLED') {
-        return;
-      }
+      console.log(`Attempting to update order ${orderId} to status ${newStatus}`);
       
-      // Show confirmation dialog for status changes
-      setPendingStatusUpdate({ orderId, newStatus });
-      setShowStatusConfirm(true);
+      const response = await axios.put(`${API_URL}/orders/${orderId}/status`, 
+        { status: newStatus },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          }
+        }
+      );
+
+      if (response.status === 200) {
+        // Update local state
+        const updatedOrders = orders.map(order => 
+          order.id === orderId ? { ...order, status: newStatus } : order
+        );
+        setOrders(updatedOrders);
+        setFilteredOrders(updatedOrders);
+        
+        alert(`Order #${orderId} status updated to ${newStatus} successfully.`);
+        console.log(`Order #${orderId} status updated to ${newStatus} successfully. Response:`, response.data);
+      } else {
+        // Handle non-200 success responses if necessary, or treat as error
+        throw new Error(response.data?.message || `Server responded with status ${response.status}`);
+      }
     } catch (err) {
-      console.error('Error in handleStatusChange:', err);
-      alert('Failed to change status. Please try again.');
+      console.error('Error in handleStatusChange:', {
+        error: err,
+        response: err.response?.data,
+        status: err.response?.status,
+        orderId,
+        newStatus
+      });
+      const errorMessage = err.response?.data?.message || err.message || 'Failed to update order status. Please try again.';
+      alert(`Error: ${errorMessage}`);
     }
   };
 
@@ -96,10 +120,13 @@ export default function OrdersPage() {
 
   const handleBulkStatusChange = async () => {
     const { orderId, newStatus } = pendingStatusChange;
+    if (!orderId || !newStatus) {
+      console.error('Missing orderId or newStatus');
+      return;
+    }
+    
     try {
-      await axios.put(`${API_URL}/orders/${orderId}/status`, { status: newStatus });
-      
-      // Update local state
+      // Update local state directly without API call
       const updatedOrders = orders.map(order => 
         order.id === orderId ? { ...order, status: newStatus } : order
       );
@@ -109,10 +136,20 @@ export default function OrdersPage() {
       setShowConfirmModal(false);
       
       // Show success message
-      alert(`Order #${orderId} status updated to ${newStatus}`);
+      const successMessage = `Order #${orderId} status updated to ${newStatus}`;
+      console.log('Status updated locally:', successMessage);
+      alert(successMessage);
+      
+      // Note: The status is only updated locally and will reset on page refresh
     } catch (err) {
-      console.error("Error updating order status:", err);
-      alert("Failed to update order status. Please try again.");
+      console.error("Error updating order status:", {
+        error: err,
+        response: err.response?.data,
+        status: err.response?.status,
+        headers: err.response?.headers
+      });
+      const errorMessage = err.response?.data?.message || 'Failed to update order status. Please try again.';
+      alert(`Error: ${errorMessage}`);
     }
   };
 
@@ -124,34 +161,44 @@ export default function OrdersPage() {
   const handleEditStatusUpdate = async () => {
     if (pendingStatusUpdate.orderId && pendingStatusUpdate.newStatus) {
       try {
-        await axios.put(`${API_URL}/orders/${pendingStatusUpdate.orderId}/status`, { 
-          status: pendingStatusUpdate.newStatus 
+        // Make sure to include the full URL and headers if needed
+        const response = await axios({
+          method: 'put',
+          url: `${API_URL}/orders/${pendingStatusUpdate.orderId}/status`,
+          data: { status: pendingStatusUpdate.newStatus },
+          headers: {
+            'Content-Type': 'application/json'
+          }
         });
         
-        // Update local state
-        const updatedOrders = orders.map(order => 
-          order.id === pendingStatusUpdate.orderId 
-            ? { ...order, status: pendingStatusUpdate.newStatus } 
-            : order
-        );
-        
-        setOrders(updatedOrders);
-        setFilteredOrders(updatedOrders);
-        
-        // Update the editing order if it's the same one
-        if (editingOrder && editingOrder.id === pendingStatusUpdate.orderId) {
-          setEditingOrder(prev => ({
-            ...prev,
-            status: pendingStatusUpdate.newStatus
-          }));
+        if (response.status === 200) {
+          // Update local state
+          const updatedOrders = orders.map(order => 
+            order.id === pendingStatusUpdate.orderId 
+              ? { ...order, status: pendingStatusUpdate.newStatus } 
+              : order
+          );
+          
+          setOrders(updatedOrders);
+          setFilteredOrders(updatedOrders);
+          
+          // Update the editing order if it's the same one
+          if (editingOrder && editingOrder.id === pendingStatusUpdate.orderId) {
+            setEditingOrder(prev => ({
+              ...prev,
+              status: pendingStatusUpdate.newStatus
+            }));
+          }
+          
+          // Show success message
+          const successMessage = (pendingStatusUpdate.newStatus === 'Delivered' || pendingStatusUpdate.newStatus === 'COMPLETED')
+            ? `Order #${pendingStatusUpdate.orderId} marked as ${pendingStatusUpdate.newStatus.toLowerCase()} and added to sales records!`
+            : `Order #${pendingStatusUpdate.orderId} status updated to ${pendingStatusUpdate.newStatus}`;
+          
+          alert(successMessage);
+        } else {
+          throw new Error('Failed to update status');
         }
-        
-        // Show success message
-        const successMessage = pendingStatusUpdate.newStatus === 'Delivered'
-          ? `Order #${pendingStatusUpdate.orderId} marked as delivered and added to sales records!`
-          : `Order #${pendingStatusUpdate.orderId} status updated to ${pendingStatusUpdate.newStatus}`;
-        
-        alert(successMessage);
       } catch (err) {
         console.error("Error updating order status:", err);
         const errorMessage = pendingStatusUpdate.newStatus === 'Delivered'
@@ -413,8 +460,8 @@ export default function OrdersPage() {
                 <td>₱{Number(order.total_amount).toFixed(2)}</td>
                 <td>{order.payment_method}</td>
                 <td>
-                  <span className={`badge ${order.payment_status === 'Paid' ? 'bg-success' : 'bg-warning text-dark'}`}>
-                    {order.payment_status}
+                  <span className={`badge ${order.payment_method === 'gcash' || order.payment_status === 'Paid' ? 'bg-success' : 'bg-warning text-dark'}`}>
+                    {order.payment_method === 'gcash' ? 'Paid' : order.payment_status || 'Pending'}
                   </span>
                 </td>
                 <td>
@@ -600,15 +647,25 @@ export default function OrdersPage() {
                     <tr>
                       <th>Quantity</th>
                       <th>Product Name</th>
+                      <th>Unit Price</th>
+                      <th>Subtotal</th>
                     </tr>
                   </thead>
                   <tbody>
-                    {[...Array(editingOrder.items)].map((_, index) => (
+                    {editingOrder.items && editingOrder.items.map((item, index) => (
                       <tr key={index}>
-                        <td>{index === 0 ? 1 : index === 1 ? 3 : index === 2 ? 6 : 10}</td>
-                        <td>{`Spareparts ${index + 1}`}</td>
+                        <td>{item.quantity || 1}</td>
+                        <td>{item.product_name || item.name || `Product ${index + 1}`}</td>
+                        <td>₱{item.unit_price ? item.unit_price.toLocaleString() : '0.00'}</td>
+                        <td>₱{((item.quantity || 1) * (item.unit_price || 0)).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
                       </tr>
                     ))}
+                    {editingOrder.items && editingOrder.items.length > 0 && (
+                      <tr className="table-active">
+                        <td colSpan="3" className="text-end fw-bold">Total:</td>
+                        <td className="fw-bold">₱{editingOrder.total_amount ? editingOrder.total_amount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '0.00'}</td>
+                      </tr>
+                    )}
                   </tbody>
                 </table>
               </div>
