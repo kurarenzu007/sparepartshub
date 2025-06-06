@@ -110,7 +110,7 @@ const HomePage = () => {
                 {cartItems.map((item, index) => (
                   <div key={index} className="cart-item">
                     <img 
-                      src={`http://localhost:5000${item.image_path}`} 
+                      src={`http://localhost:5000/uploads/${item.image_path}`} 
                       alt={item.name} 
                       className="cart-item-img" 
                      
@@ -173,7 +173,7 @@ const HomePage = () => {
               onClick={() => navigate(`/product-details/${product.id}`)}
             >
               <img 
-                 src={`http://localhost:5000${product.image_path}`}
+                 src={`http://localhost:5000/uploads/${product.image_path}`}
                 alt={product.name} 
                 className="product-image"
               />

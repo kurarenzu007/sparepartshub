@@ -108,7 +108,22 @@ const SalesPage = () => {
                   <td>{sale.id}</td>
                   <td>{new Date(sale.transaction_date).toLocaleDateString()}</td>
                   <td>{sale.customer_name}</td>
-                  <td>{sale.products}</td>
+                  <td>
+                    {(() => {
+                      try {
+                        const products = JSON.parse(sale.products);
+                        return (
+                          <ul className="product-list">
+                            {Array.isArray(products) && products.map((product, index) => (
+                              <li key={index}>{product.name} (x{product.quantity})</li>
+                            ))}
+                          </ul>
+                        );
+                      } catch (e) {
+                        return sale.products; // Fallback to raw data if parsing fails
+                      }
+                    })()}
+                  </td>
                   <td>{sale.quantity}</td>
                   <td>₱ {Number(sale.amount).toLocaleString()}</td>
                   <td>

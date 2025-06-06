@@ -63,7 +63,12 @@ router.get('/:id/image', async (req, res) => {
       return res.status(404).send('Image not found');
     }
     
-    const imagePath = path.join(__dirname, '../../uploads', path.basename(products[0].image_path));
+    // Handle both prefixed and non-prefixed image paths
+    let imageRelativePath = products[0].image_path;
+    if (!imageRelativePath.startsWith('/uploads/')) {
+      imageRelativePath = '/uploads/' + imageRelativePath;
+    }
+    const imagePath = path.join(__dirname, '../..', imageRelativePath.startsWith('/') ? imageRelativePath.substring(1) : imageRelativePath);
     
     // Check if file exists
     if (!fs.existsSync(imagePath)) {
@@ -110,8 +115,8 @@ router.post('/', upload.single('image'), async (req, res) => {
 
     const { name, brand, price, stock, category, description, sku, lowStock, supplier } = req.body;
     
-    // Store only the filename in the database without /uploads/ prefix
-    const imagePath = req.file ? req.file.filename : null;
+    // Store the path with /uploads/ prefix in the database
+    const imagePath = req.file ? `/uploads/${req.file.filename}` : null;
 
     // Insert into products table
     const [productResult] = await connection.query(
@@ -157,7 +162,7 @@ router.put('/:id', upload.single('image'), async (req, res) => {
 
     const { name, brand, price, stock, category, description, sku, lowStock, supplier } = req.body;
     const productId = req.params.id;
-    const newImagePath = req.file ? req.file.filename : null;  // Store filename only
+    const newImagePath = req.file ? `/uploads/${req.file.filename}` : null;  // Store with /uploads/ prefix
 
     // First check if the product exists and get current image path
     const [existingProduct] = await connection.query(
@@ -185,7 +190,7 @@ router.put('/:id', upload.single('image'), async (req, res) => {
       
       // Delete old image file if it exists
       if (existingProduct[0].image_path) {
-        const oldImagePath = path.join(__dirname, '../../uploads', existingProduct[0].image_path);
+        const oldImagePath = path.join(__dirname, '../..', existingProduct[0].image_path.startsWith('/') ? existingProduct[0].image_path.substring(1) : existingProduct[0].image_path);
         if (fs.existsSync(oldImagePath)) {
           fs.unlink(oldImagePath, (err) => {
             if (err) console.error('Error deleting old image:', err);

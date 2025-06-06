@@ -108,6 +108,7 @@ router.post('/', async (req, res) => {
 router.put('/:id/status', async (req, res) => {
   const { id } = req.params;
   const { status } = req.body;
+  let connection;
   
   // Log the incoming request
   console.log('\n===== NEW ORDER STATUS UPDATE REQUEST =====');
@@ -123,20 +124,11 @@ router.put('/:id/status', async (req, res) => {
     });
   }
   
-  const connection = await promisePool.getConnection().catch(err => {
-    console.error('ERROR: Failed to get database connection:', err);
-    return null;
-  });
-  
-  if (!connection) {
-    return res.status(500).json({
-      success: false,
-      message: 'Could not connect to database',
-      orderId: id
-    });
-  }
-  
   try {
+    // Get database connection
+    connection = await promisePool.getConnection();
+    console.log('Database connection established');
+    
     // Start transaction
     console.log('Starting database transaction...');
     await connection.beginTransaction();
@@ -271,9 +263,49 @@ router.put('/:id/status', async (req, res) => {
         
         console.log('Sales record inserted successfully:', salesResult);
         console.log(`Sales record created for order ${id}`);
+        
+        // Update product quantities
+        console.log('Updating product quantities...');
+        for (const item of items) {
+          console.log(`Processing order item: ${item.product_name}, Quantity: ${item.quantity}`);
+          
+          try {
+            // First, find the product by name to get its ID and current stock
+            const [products] = await connection.query(
+              'SELECT id, stock FROM products WHERE name = ?',
+              [item.product_name]
+            );
+            
+            if (products.length === 0) {
+              console.warn(`Product not found with name: ${item.product_name}, skipping stock update`);
+              continue;
+            }
+            
+            const product = products[0];
+            const currentStock = product.stock;
+            const newStock = currentStock - item.quantity;
+            
+            if (newStock < 0) {
+              console.warn(`Warning: Negative stock for product ${product.id} (${item.product_name}) will result`);
+            }
+            
+            // Update the product stock
+            await connection.query(
+              'UPDATE products SET stock = ? WHERE id = ?',
+              [newStock, product.id]
+            );
+            
+            console.log(`Updated product ${product.id} (${item.product_name}) stock from ${currentStock} to ${newStock}`);
+            
+          } catch (error) {
+            console.error(`Error updating stock for product ${item.product_name}:`, error);
+            // Continue with next product even if one fails
+          }
+        }
+        console.log('Finished updating product quantities');
       }
     } else {
-      console.log(`Status ${status} does not require sales record.`);
+      console.log(`Status ${status} does not require sales record or stock update.`);
     }
     
     // Commit transaction
@@ -293,13 +325,15 @@ router.put('/:id/status', async (req, res) => {
     // Error handling
     console.error('ERROR in order status update:', error);
     
-    // Attempt to rollback
-    try {
-      console.log('Attempting to rollback transaction...');
-      await connection.rollback();
-      console.log('Transaction rolled back');
-    } catch (rollbackError) {
-      console.error('ERROR rolling back transaction:', rollbackError);
+    // Attempt to rollback if we have a connection and a transaction was started
+    if (connection && typeof connection.rollback === 'function') {
+      try {
+        console.log('Attempting to rollback transaction...');
+        await connection.rollback();
+        console.log('Transaction rolled back');
+      } catch (rollbackError) {
+        console.error('ERROR rolling back transaction:', rollbackError);
+      }
     }
     
     // Send error response
@@ -312,12 +346,18 @@ router.put('/:id/status', async (req, res) => {
     });
     
   } finally {
-    // Always release the connection
-    console.log('Releasing database connection...');
-    connection.release().catch(err => {
-      console.error('Error releasing database connection:', err);
-    });
-    console.log('Database connection released');
+    // Always release the connection if it exists
+    if (connection && typeof connection.release === 'function') {
+      console.log('Releasing database connection...');
+      try {
+        await connection.release();
+        console.log('Database connection released');
+      } catch (releaseError) {
+        console.error('Error releasing database connection:', releaseError);
+      }
+    } else {
+      console.log('No database connection to release');
+    }
     console.log('===== REQUEST COMPLETE =====\n');
   }
 });

@@ -129,9 +129,31 @@
   }
   
   /* Order ID styling */
+  .sales-table tbody tr:last-child {
+    border-bottom: none;
+  }
+  
   .sales-table td:first-child {
     font-weight: 600;
     color: #3498db;
+  }
+  
+  /* Product List Styles */
+  .product-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .product-list li {
+    padding: 4px 0;
+    font-size: 13px;
+    color: #444;
+    border-bottom: 1px solid #f0f0f0;
+  }
+  
+  .product-list li:last-child {
+    border-bottom: none;
   }
   
   /* Status Badge Styling */

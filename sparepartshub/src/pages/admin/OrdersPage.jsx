@@ -15,13 +15,10 @@ export default function OrdersPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [sortConfig, setSortConfig] = useState({ key: "id", direction: "ascending" });
   const [showEditModal, setShowEditModal] = useState(false);
-  const [showViewModal, setShowViewModal] = useState(false);
-  const [selectedOrder, setSelectedOrder] = useState(null);
+
   const [editingOrder, setEditingOrder] = useState(null);
   const [showStatusConfirm, setShowStatusConfirm] = useState(false);
   const [pendingStatusUpdate, setPendingStatusUpdate] = useState({ orderId: null, newStatus: '' });
-  const [showConfirmModal, setShowConfirmModal] = useState(false);
-  const [pendingStatusChange, setPendingStatusChange] = useState({ orderId: null, newStatus: null });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const ordersPerPage = 5;
@@ -49,7 +46,32 @@ export default function OrdersPage() {
     fetchOrders();
   }, []);
 
-  const handleStatusChange = async (orderId, newStatus) => {
+  // New function to initiate status change and show confirmation modal
+  const handleStatusChange = (orderId, newStatus) => {
+    const currentOrder = orders.find(order => order.id === orderId);
+    if (currentOrder && currentOrder.status === newStatus) {
+      return; // No change, do nothing
+    }
+    setPendingStatusUpdate({ orderId, newStatus });
+    setShowStatusConfirm(true);
+  };
+
+  // Function to call when user confirms the status change in the modal
+  const confirmStatusUpdateAndProceed = async () => {
+    if (pendingStatusUpdate.orderId && pendingStatusUpdate.newStatus) {
+      await executeBackendStatusUpdate(pendingStatusUpdate.orderId, pendingStatusUpdate.newStatus);
+    }
+    closeConfirmationModal();
+  };
+
+  // Function to close the confirmation modal and reset pending state
+  const closeConfirmationModal = () => {
+    setShowStatusConfirm(false);
+    setPendingStatusUpdate({ orderId: null, newStatus: '' });
+  };
+
+  // Renamed from handleStatusChange: This function executes the actual backend update
+  const executeBackendStatusUpdate = async (orderId, newStatus) => {
     try {
       console.log(`Attempting to update order ${orderId} to status ${newStatus}`);
       
@@ -90,21 +112,7 @@ export default function OrdersPage() {
     }
   };
 
-  const handleViewOrder = async (orderId) => {
-    try {
-      setLoading(true);
-      const response = await axios.get(`${API_URL}/orders/${orderId}`);
-      setSelectedOrder(response.data);
-      setShowViewModal(true);
-    } catch (err) {
-      console.error('Error fetching order details:', err);
-      alert('Failed to load order details. Please try again.');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleEditOrder = async (order) => {
+const handleEditOrder = async (order) => {
     try {
       setLoading(true);
       const response = await axios.get(`${API_URL}/orders/${order.id}`);
@@ -118,45 +126,7 @@ export default function OrdersPage() {
     }
   };
 
-  const handleBulkStatusChange = async () => {
-    const { orderId, newStatus } = pendingStatusChange;
-    if (!orderId || !newStatus) {
-      console.error('Missing orderId or newStatus');
-      return;
-    }
-    
-    try {
-      // Update local state directly without API call
-      const updatedOrders = orders.map(order => 
-        order.id === orderId ? { ...order, status: newStatus } : order
-      );
-      
-      setOrders(updatedOrders);
-      setFilteredOrders(updatedOrders);
-      setShowConfirmModal(false);
-      
-      // Show success message
-      const successMessage = `Order #${orderId} status updated to ${newStatus}`;
-      console.log('Status updated locally:', successMessage);
-      alert(successMessage);
-      
-      // Note: The status is only updated locally and will reset on page refresh
-    } catch (err) {
-      console.error("Error updating order status:", {
-        error: err,
-        response: err.response?.data,
-        status: err.response?.status,
-        headers: err.response?.headers
-      });
-      const errorMessage = err.response?.data?.message || 'Failed to update order status. Please try again.';
-      alert(`Error: ${errorMessage}`);
-    }
-  };
 
-  const cancelBulkStatusChange = () => {
-    setShowConfirmModal(false);
-    setPendingStatusChange({ orderId: null, newStatus: null });
-  };
 
   const handleEditStatusUpdate = async () => {
     if (pendingStatusUpdate.orderId && pendingStatusUpdate.newStatus) {
@@ -391,6 +361,8 @@ export default function OrdersPage() {
         </div>
       </div>
       
+   
+
       {/* Error Message */}
       {error && (
         <div className="alert alert-danger d-flex align-items-center mb-4">
@@ -472,14 +444,6 @@ export default function OrdersPage() {
                   />
                 </td>
                 <td>
-                  <button 
-                    className="btn btn-outline-primary btn-sm me-2" 
-                    title="View"
-                    onClick={() => handleViewOrder(order.id)}
-                    disabled={loading}
-                  >
-                    <Eye size={16} />
-                  </button>
                   <button 
                     className="btn btn-outline-success btn-sm" 
                     title="Edit"
@@ -682,108 +646,7 @@ export default function OrdersPage() {
         </div>
       )}
 
-      {/* Confirmation Modal */}
-      {showConfirmModal && (
-        <div className="modal-backdrop">
-          <div className="modal-content" style={{ maxWidth: '450px' }}>
-            <div className="modal-header">
-              <h5 className="modal-title">Confirm Status Change</h5>
-              <button className="btn-close" onClick={cancelStatusChange}>
-                <X size={18} />
-              </button>
-            </div>
-            <div className="modal-body">
-              <p>Are you sure you want to change the order status to <strong>{pendingStatusChange.newStatus}</strong>?</p>
-              <p className="text-muted mb-0">This action cannot be undone.</p>
-            </div>
-            <div className="modal-footer">
-              <button className="btn btn-outline-secondary" onClick={cancelStatusChange}>
-                Cancel
-              </button>
-              <button className="btn btn-primary" onClick={confirmStatusChange}>
-                Confirm
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Order View Modal */}
-      {showViewModal && selectedOrder && (
-        <div className="modal-backdrop">
-          <div className="modal-content view-modal">
-            <div className="modal-header view-header">
-              <h5 className="modal-title">OrderID#{selectedOrder.id.toString().padStart(4, '0')}</h5>
-              <button className="btn-close" onClick={() => setShowViewModal(false)}>
-                <X size={18} />
-              </button>
-            </div>
-            <div className="modal-body view-body">
-              <div className="view-row">
-                <div className="view-field">
-                  <label className="view-label">Customer Name</label>
-                  <div className="view-value">{selectedOrder.customer_name}</div>
-                </div>
-                <div className="view-field">
-                  <label className="view-label">Order Date</label>
-                  <div className="view-value">{formatDate(selectedOrder.order_date)}</div>
-                </div>
-              </div>
-              
-              <div className="view-row">
-                <div className="view-field">
-                  <label className="view-label">Email</label>
-                  <div className="view-value">juan@email.com</div>
-                </div>
-                <div className="view-field">
-                  <label className="view-label">Contact</label>
-                  <div className="view-value">09123456789</div>
-                </div>
-              </div>
-              
-              <div className="view-row">
-                <div className="view-field">
-                  <label className="view-label">Delivery Method</label>
-                  <div className="view-value">Cash on Delivery</div>
-                </div>
-                <div className="view-field">
-                  <label className="view-label">Mode of Payment</label>
-                  <div className="view-value">{selectedOrder.payment_method}</div>
-                </div>
-              </div>
-              
-              <div className="view-row full-width">
-                <div className="view-field">
-                  <label className="view-label">Delivery Address</label>
-                  <div className="view-value">Brgy. Lantic, Carmona, Cavite</div>
-                </div>
-              </div>
-              
-              <div className="view-table">
-                <table className="table table-bordered">
-                  <thead className="table-light">
-                    <tr>
-                      <th>Quantity</th>
-                      <th>Product Name</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {[...Array(selectedOrder.items)].map((_, index) => (
-                      <tr key={index}>
-                        <td>{index === 0 ? 1 : index === 1 ? 3 : index === 2 ? 6 : 10}</td>
-                        <td>{`Spareparts ${index + 1}`}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-            <div className="modal-footer view-footer">
-              <button className="btn btn-primary" onClick={() => setShowViewModal(false)}>Back</button>
-            </div>
-          </div>
-        </div>
-      )}
+      {/* Confirmation modal is now handled by showStatusConfirm */}
     </div>
   );
 }

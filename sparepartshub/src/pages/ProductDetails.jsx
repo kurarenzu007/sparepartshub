@@ -193,7 +193,7 @@ const ProductDetails = () => {
           {/* Left side - Image */}
           <div className="product-image-container">
             <img 
-               src={`http://localhost:5000${product.image_path}`}
+               src={`http://localhost:5000/uploads/${product.image_path}`}
               alt={product.name} 
               className="product-detail-image" 
             />

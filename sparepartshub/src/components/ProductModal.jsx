@@ -35,7 +35,7 @@ const ProductModal = ({ isOpen, onClose, onSubmit, product }) => {
       });
       // Set image preview if product has an image
       if (product.image_path) {
-        setImagePreview(`http://localhost:5000${product.image_path}`);
+        setImagePreview(`http://localhost:5000/uploads/${product.image_path}`);
       }
     } else {
       setFormData({

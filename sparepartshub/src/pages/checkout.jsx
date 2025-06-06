@@ -297,7 +297,7 @@ const Checkout = () => {
                 <tr key={index}>
                   <td>
                     <div className="product-row">
-                      <img src={`http://localhost:5000${item.image_path}`}  alt={item.name} className="product-image" />
+                      <img src={`http://localhost:5000/uploads/${item.image_path}`}  alt={item.name} className="product-image" />
                       <div className="product-info">
                         <div className="product-brand">{item.brand}</div>
                         <div className="product-name">{item.name}</div>
