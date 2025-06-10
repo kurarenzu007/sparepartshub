@@ -115,8 +115,8 @@ router.post('/', upload.single('image'), async (req, res) => {
 
     const { name, brand, price, stock, category, description, sku, lowStock, supplier } = req.body;
     
-    // Store the path with /uploads/ prefix in the database
-    const imagePath = req.file ? `/uploads/${req.file.filename}` : null;
+    // Store the filename without the /uploads/ prefix
+    const imagePath = req.file ? req.file.filename : null;
 
     // Insert into products table
     const [productResult] = await connection.query(
@@ -162,7 +162,7 @@ router.put('/:id', upload.single('image'), async (req, res) => {
 
     const { name, brand, price, stock, category, description, sku, lowStock, supplier } = req.body;
     const productId = req.params.id;
-    const newImagePath = req.file ? `/uploads/${req.file.filename}` : null;  // Store with /uploads/ prefix
+    const newImagePath = req.file ? req.file.filename : null;
 
     // First check if the product exists and get current image path
     const [existingProduct] = await connection.query(
