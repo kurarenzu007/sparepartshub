@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS products (
     description TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    image VARCHAR(244), NOT NULL
+    image_path VARCHAR(244), NOT NULL
 );
 
 -- Inventory table

@@ -157,6 +157,7 @@ router.put('/:id/status', async (req, res) => {
     // 2. Check if we need to create a sales record
     const statusUpper = status.toUpperCase();
     console.log(`Checking if status ${statusUpper} requires sales record...`);
+    console.log('Available order items:', JSON.stringify(items, null, 2));
     
     if (statusUpper === 'DELIVERED' || statusUpper === 'COMPLETED') {
       console.log('Status requires sales record. Processing...');
@@ -271,13 +272,23 @@ router.put('/:id/status', async (req, res) => {
           
           try {
             // First, find the product by name to get its ID and current stock
+            console.log(`Looking up product by name: "${item.product_name}"`);
             const [products] = await connection.query(
-              'SELECT id, stock FROM products WHERE name = ?',
+              'SELECT id, stock, name FROM products WHERE name = ?',
               [item.product_name]
             );
             
+            console.log('Product lookup results:', JSON.stringify(products, null, 2));
+            
             if (products.length === 0) {
-              console.warn(`Product not found with name: ${item.product_name}, skipping stock update`);
+              console.warn(`Product not found with name: "${item.product_name}", checking for similar products...`);
+              // Try a more flexible search
+              const [similarProducts] = await connection.query(
+                'SELECT id, stock, name FROM products WHERE name LIKE ?',
+                [`%${item.product_name}%`]
+              );
+              console.log('Similar products found:', JSON.stringify(similarProducts, null, 2));
+              console.warn(`No exact match found for "${item.product_name}", skipping stock update`);
               continue;
             }
             
