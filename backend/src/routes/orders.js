@@ -17,6 +17,23 @@ router.get('/', async (req, res) => {
   }
 });
 
+// Get order status
+router.get('/:id/status', async (req, res) => {
+  try {
+    const [rows] = await promisePool.query(
+      'SELECT status FROM orders WHERE id = ?', 
+      [req.params.id]
+    );
+    if (rows.length === 0) {
+      return res.status(404).json({ message: 'Order not found' });
+    }
+    res.json({ status: rows[0].status });
+  } catch (error) {
+    console.error('Error fetching order status:', error);
+    res.status(500).json({ message: 'Error fetching order status' });
+  }
+});
+
 // Get a specific order with its items
 router.get('/:id', async (req, res) => {
   const { id } = req.params;
@@ -105,6 +122,7 @@ router.post('/', async (req, res) => {
 });
 
 // Update order status
+// Update order status (PUT)
 router.put('/:id/status', async (req, res) => {
   const { id } = req.params;
   const { status } = req.body;
@@ -154,7 +172,13 @@ router.put('/:id/status', async (req, res) => {
     
     console.log(`Successfully updated order ${id} status to ${status}`);
     
-    // 2. Check if we need to create a sales record
+    // 2. Get order items for potential sales record
+    const [items] = await connection.query(
+      'SELECT * FROM order_items WHERE order_id = ?',
+      [id]
+    );
+    
+    // 3. Check if we need to create a sales record
     const statusUpper = status.toUpperCase();
     console.log(`Checking if status ${statusUpper} requires sales record...`);
     console.log('Available order items:', JSON.stringify(items, null, 2));
